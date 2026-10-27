@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SentinX | Real-Time Network Traffic Monitoring & ML Anomaly Detection</title>
+  <meta name="description" content="Mini Project in Cryptography and Network Security: Real-Time Network Traffic Monitoring, Isolation Forest Anomaly Detection, Cryptographic Entropy Analysis, and Autonomous Firewall Mitigation.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/index.css">
+  <!-- Chart.js for real-time telemetry waveforms -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon">🛡️</div>
+      <div class="brand-title">
+        <h1>SENTINX // CYBER DEFENSE LAB</h1>
+        <span>Network Security & Cryptography Mini-Project • VTU BCS703</span>
+      </div>
+    </div>
+    <div class="header-status">
+      <div id="system-status-badge" class="status-badge">
+        <span class="pulsing-dot"></span>
+        <span id="system-status-text">SHIELD ACTIVE (MONITORING)</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Dashboard Container -->
+  <main class="dashboard-grid">
+
+    <!-- KPI Metric Cards -->
+    <section class="metrics-row" aria-label="Security Metrics Summary">
+      <div class="glass-panel stat-card">
+        <span class="stat-label">Packets Inspected</span>
+        <span id="kpi-packets" class="stat-value">0</span>
+        <span class="stat-sub">Real-time sliding inspection window</span>
+      </div>
+      <div class="glass-panel stat-card">
+        <span class="stat-label">Anomalies Detected</span>
+        <span id="kpi-anomalies" class="stat-value" style="color: var(--accent-rose);">0</span>
+        <span class="stat-sub">Isolation Forest & Heuristic triggers</span>
+      </div>
+      <div class="glass-panel stat-card">
+        <span class="stat-label">Threat Severity</span>
+        <span id="kpi-severity" class="stat-value" style="color: var(--accent-emerald);">LOW</span>
+        <span id="kpi-threat-desc" class="stat-sub">Normal Benign Activity</span>
+      </div>
+      <div class="glass-panel stat-card">
+        <span class="stat-label">Mitigation Drop Table</span>
+        <span id="kpi-firewall" class="stat-value" style="color: var(--accent-amber);">0</span>
+        <span class="stat-sub">Auto-quarantined malicious IPs</span>
+      </div>
+    </section>
+
+    <!-- Attack Injection & Simulation Matrix -->
+    <section class="glass-panel control-hub" aria-label="Simulation Command Console">
+      <div class="hub-title">
+        <div>
+          <h3>⚔️ Attack Injection & Threat Simulation Vector</h3>
+          <p class="stat-sub">Trigger real-world attack profiles to observe live ML anomaly boundaries and automated crypto defense response.</p>
+        </div>
+        <button id="btn-flush-firewall" class="btn btn-amber" onclick="clearFirewall()">Clear Firewall Quarantine</button>
+      </div>
+      <div class="attack-buttons">
+        <button id="sim-btn-normal" class="btn btn-cyan active" onclick="setSimulationMode('NORMAL')">
+          <span>🟢</span> Benign Traffic Profile
+        </button>
+        <button id="sim-btn-syn" class="btn btn-rose" onclick="setSimulationMode('SYN_FLOOD')">
+          <span>⚡</span> TCP SYN Flood (DDoS)
+        </button>
+        <button id="sim-btn-scan" class="btn btn-amber" onclick="setSimulationMode('PORT_SCAN')">
+          <span>📡</span> Port Reconnaissance / Scanning
+        </button>
+        <button id="sim-btn-exfil" class="btn btn-purple" onclick="setSimulationMode('EXFILTRATION')">
+          <span>🔒</span> High-Entropy Exfiltration (C2)
+        </button>
+        <button id="sim-btn-brute" class="btn btn-rose" onclick="setSimulationMode('BRUTE_FORCE')">
+          <span>🔑</span> SSH Credential Brute-Force
+        </button>
+      </div>
+    </section>
+
+    <!-- Real-Time Waveform Chart -->
+    <section class="glass-panel" style="padding: 1.5rem;" aria-label="Network Telemetry Graphs">
+      <div class="hub-title" style="margin-bottom: 1rem;">
+        <h3>📊 Telemetry Telemetry Stream (Packet Rate & Shannon Entropy)</h3>
+        <span class="stat-sub">Unsupervised Isolation Forest Decision Boundary Analysis</span>
+      </div>
+      <div style="height: 240px; position: relative;">
+        <canvas id="telemetryChart"></canvas>
+      </div>
+    </section>
+
+    <!-- Split Stream View: Live Packet Flow & Security Alerts -->
+    <div class="main-content-grid">
+      
+      <!-- Packet Flow Sniffer Table -->
+      <section class="glass-panel table-panel" aria-label="Inspected Packet Stream">
+        <div class="table-header-flex">
+          <h3>🛰️ Real-Time Packet Sniffer & Crypto Payload Inspection</h3>
+          <span class="stat-sub" id="packet-counter-meta">Displaying recent frames</span>
+        </div>
+        <div class="table-container">
+          <table id="packet-stream-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Source IP</th>
+                <th>Destination</th>
+                <th>Proto</th>
+                <th>Flags</th>
+                <th>Entropy</th>
+                <th>SHA-256 Digest</th>
+                <th>Firewall</th>
+              </tr>
+            </thead>
+            <tbody id="packet-tbody">
+              <!-- Dynamically populated via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Alert & Threat Event Stream -->
+      <section class="glass-panel table-panel" aria-label="Threat Detections">
+        <div class="table-header-flex">
+          <h3>🚨 Active Threat Alerts & Mitigation</h3>
+          <span class="stat-sub">Rule & ML Correlation</span>
+        </div>
+        <div class="alerts-list" id="alerts-container">
+          <!-- Dynamically populated via JS -->
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Cryptographic Verification & Payload Analyzer Playground -->
+    <section class="glass-panel crypto-panel" aria-label="Cryptographic Security Tool">
+      <div class="hub-title">
+        <div>
+          <h3>🔐 Cryptographic Engine & Entropy Audit Bench (Lab Module)</h3>
+          <p class="stat-sub">Enter raw communication payloads to compute Shannon entropy, SHA-256 hash, HMAC-SHA256 signature, and AES-256-GCM ciphertext.</p>
+        </div>
+        <button class="btn btn-cyan" onclick="auditCustomPayload()">Audit Payload</button>
+      </div>
+      <div class="crypto-grid">
+        <div>
+          <label for="crypto-input" class="stat-label">Payload Text to Encrypt & Verify:</label>
+          <textarea id="crypto-input" class="input-box" rows="5" placeholder="Enter sensitive communication text, tokens, or network payload here...">GET /admin/exfiltrate?auth=secret_token_1234 HTTP/1.1
+Host: secure-internal.bank.net
+User-Agent: Mozilla/5.0</textarea>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+          <div>
+            <span class="stat-label">Calculated Shannon Entropy:</span>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span id="crypto-entropy-val" style="font-family: var(--font-mono); font-weight: 700; color: var(--accent-cyan);">--</span>
+              <span id="crypto-entropy-status" class="stat-sub">Awaiting Audit</span>
+            </div>
+            <div class="entropy-meter">
+              <div id="crypto-entropy-bar" class="entropy-bar"></div>
+            </div>
+          </div>
+          <div>
+            <span class="stat-label">SHA-256 Integrity Digest:</span>
+            <div id="crypto-sha-val" class="input-box" style="padding: 0.5rem; word-break: break-all; font-size: 0.75rem; color: #a5f3fc;">--</div>
+          </div>
+          <div>
+            <span class="stat-label">AES-256-GCM Ciphertext Hex (Authenticated):</span>
+            <div id="crypto-aes-val" class="input-box" style="padding: 0.5rem; word-break: break-all; font-size: 0.75rem; color: #e9d5ff;">--</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
